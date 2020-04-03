@@ -1,0 +1,62 @@
+Bamboo Tasks in 1 Job
+
+1 Source Code Checkout configuration
+repository: wdio
+2 OFF Script Run Node install
+Interpreter /bin/sh or cmd.exe
+Script location inline
+Script body :
+PATH=/local/node-v10.16.2-linux-x64/bin:$PATH; export PATH
+cd ${bamboo.build.working.directory}
+node -v
+npm -v
+npm install
+3 OFF Run linter
+Interpreter /bin/sh or cmd.exe
+Script location inline
+Script body :
+PATH=/local/node-v10.16.2-linux-x64/bin:$PATH; export PATH
+cd ${bamboo.build.working.directory}
+node -v
+npm -v
+npm run lint
+
+4 Create Saucelabs Tunnel
+Interpreter /bin/sh or cmd.exe
+Script location inline
+Script body :
+PATH=/local/node-v10.16.2-linux-x64/bin:$PATH; export PATH
+cd ${bamboo.build.working.directory}
+SAUCE_PATH="/local2/company/sc-4.5.3-linux/bin/";
+READY_FILE="foo.txt"
+echo "changing directory to: ${SAUCE_PATH}"
+cd ${SAUCE_PATH}
+pwd
+rm ${READY_FILE}
+./sc -u fdgdfgdfstaccount -k 54438694-2c6c-4d5e-bee7-53634534590 -f ${READY_FILE}
+
+while [ ! -f ${READY_FILE} ]; do
+  sleep .5
+done
+
+5 Run tests
+Interpreter /bin/sh or cmd.exe
+Script location inline
+Script body :
+
+echo ${bamboo_gcccddd_root_ca} | base64 --decode > cccddd-root-ca.pem
+export NODE_EXTRA_CA_CERTS=cccddd-root-ca.pem
+echo "path before"
+echo $PATH
+PATH=/local/node-v10.16.2-linux-x64/bin:$PATH; export PATH
+echo "path after"
+echo $PATH
+cd ${bamboo.build.working.directory}
+echo "node version:"
+node -v
+echo "npm version:"
+npm -v
+#rm -rf ./node_modules
+#rm package-lock.json
+#npm i
+./node_modules/.bin/wdio wdio.conf.remote.grid.js --baseUrl https://q2lhybap552.gcom.xxx.com:9002
